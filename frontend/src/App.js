@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Contact from "./components/Contacts";
+import Contact from "./components/Contact";
 import Header from "./components/Header";
 import logo from "./logo.svg";
 import "./App.css";
