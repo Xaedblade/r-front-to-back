@@ -3,13 +3,16 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "homepage": "https://xaedblade.gethub.io/r-front-back",
   "scripts": {
+    "deploy": "cd frontend && npm run build && gh-pages -d build && mv -v build ..",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Chad Vandermark",
   "license": "UNLICENSED",
   "dependencies": {
     "axios": "^0.19.2",
+    "gh-pages": "^2.2.0",
     "react-router-dom": "^5.1.2",
     "uuid": "^7.0.3"
   }
