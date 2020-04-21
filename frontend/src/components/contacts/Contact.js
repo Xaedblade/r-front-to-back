@@ -1,16 +1,23 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Consumer } from "../context";
+import { Consumer } from "../../context";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 class Contact extends Component {
   state = {
-    showContactInfo: false
+    showContactInfo: false,
   };
-  onShowClick = e => {
+  onShowClick = (e) => {
     this.setState({ showContactInfo: !this.state.showContactInfo });
   };
-  onDeleteClick = (id, dispatch) => {
-    dispatch({ type: "DELETE_CONTACT", payload: id });
+  onDeleteClick = async (id, dispatch) => {
+    try {
+      dispatch({ type: "DELETE_CONTACT", payload: id });
+      await axios.delete(`https://jsonplaceholder.typicode.com/users/${id}`);
+    } catch (err) {
+      dispatch({ type: "DELETE_CONTACT", payload: id });
+    }
   };
   render() {
     const { id, name, email, phone } = this.props.contact;
@@ -18,7 +25,7 @@ class Contact extends Component {
 
     return (
       <Consumer>
-        {value => {
+        {(value) => {
           const { dispatch } = value;
           return (
             <div className="card card-body mb-3">
@@ -32,8 +39,23 @@ class Contact extends Component {
                 <i
                   onClick={this.onDeleteClick.bind(this, id, dispatch)}
                   className="fas fa-times"
-                  style={{ cursor: "pointer", float: "right", color: "red" }}
+                  style={{
+                    cursor: "pointer",
+                    float: "right",
+                    color: "red",
+                  }}
                 />
+                <Link to={`contact/edit/${id}`}>
+                  <i
+                    className="fas fa-pencil-alt"
+                    style={{
+                      cursor: "pointer",
+                      float: "right",
+                      color: "black",
+                      marginRight: "1rem",
+                    }}
+                  />
+                </Link>
               </h4>
               {showContactInfo ? (
                 <ul className="list-group">
@@ -50,7 +72,7 @@ class Contact extends Component {
 }
 
 Contact.propTypes = {
-  contact: PropTypes.object.isRequired
+  contact: PropTypes.object.isRequired,
 };
 
 export default Contact;
