@@ -1,126 +1,99 @@
-import React, { Component } from "react";
-import uuid from "uuid";
-import { Consumer } from "../../context";
-import TextInputGroup from "../layout/TextInputGroup";
-import axios from "axios";
+import React, { Component } from 'react';
+import TextInputGroup from '../layout/TextInputGroup';
 
 class EditContact extends Component {
   state = {
-    name: "",
-    email: "",
-    phone: "",
-    errors: {},
+    name: '',
+    email: '',
+    phone: '',
+    errors: {}
   };
 
-  async componentDidMount() {
-    const { id } = this.props.match.params;
-    const res = await axios.get(
-      `https://jsonplaceholder.typicode.com/users/${id}`
-    );
-    this.setState(res.data);
-  }
-
-  onChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
-  };
-
-  onSubmit = async (dispatch, e) => {
+  onSubmit = (e) => {
     e.preventDefault();
 
     const { name, email, phone } = this.state;
 
-    // Check for errors
-    if (name === "") {
-      this.setState({ errors: { name: "name is required" } });
+    // Check For Errors
+    if (name === '') {
+      this.setState({ errors: { name: 'Name is required' } });
       return;
     }
 
-    if (email === "") {
-      this.setState({ errors: { email: "email is required" } });
+    if (email === '') {
+      this.setState({ errors: { email: 'Email is required' } });
       return;
     }
 
-    if (phone === "") {
-      this.setState({ errors: { phone: "phone is required" } });
+    if (phone === '') {
+      this.setState({ errors: { phone: 'Phone is required' } });
       return;
     }
 
-    const updateContact = {
+    const updContact = {
       name,
       email,
-      phone,
+      phone
     };
 
     const { id } = this.props.match.params;
-    // post data to api
-    const res = await axios.put(
-      `https://jsonplaceholder.typicode.com/users/${id}`,
-      updateContact
-    );
 
-    // add new contact to context
-    dispatch({ type: "UPDATE_CONTACT", payload: res.data });
+    //// UPDATE CONTACT ////
 
-    // clear state
+    // Clear State
     this.setState({
-      name: "",
-      email: "",
-      phone: "",
-      errors: {},
+      name: '',
+      email: '',
+      phone: '',
+      errors: {}
     });
 
-    // redirect to contacts
-    this.props.history.push("/");
+    this.props.history.push('/');
   };
+
+  onChange = e => this.setState({ [e.target.name]: e.target.value });
 
   render() {
     const { name, email, phone, errors } = this.state;
 
     return (
-      <Consumer>
-        {(value) => {
-          const { dispatch } = value;
-          return (
-            <div className="card mb-3">
-              <div className="card-header">Add Contact</div>
-              <div className="card-body">
-                <form onSubmit={this.onSubmit.bind(this, dispatch)}>
-                  <TextInputGroup
-                    label="Name"
-                    name="name"
-                    placeholder="Enter name"
-                    value={name}
-                    onChange={this.onChange}
-                    error={errors.name}
-                  />
-                  <TextInputGroup
-                    label="Email"
-                    name="email"
-                    placeholder="Enter email"
-                    type="email"
-                    value={email}
-                    onChange={this.onChange}
-                    error={errors.email}
-                  />
-                  <TextInputGroup
-                    label="Phone"
-                    name="phone"
-                    placeholder="Enter phone"
-                    value={phone}
-                    onChange={this.onChange}
-                    error={errors.phone}
-                  />
-                  <input
-                    type="submit"
-                    className="btn btn-light btn-block"
-                    value="Update Contact"
-                  />
-                </form>
-              </div>
-            </div>
-          );
-        }}
-      </Consumer>
+      <div className="card mb-3">
+        <div className="card-header">Edit Contact</div>
+        <div className="card-body">
+          <form onSubmit={this.onSubmit}>
+            <TextInputGroup
+              label="Name"
+              name="name"
+              placeholder="Enter Name"
+              value={name}
+              onChange={this.onChange}
+              error={errors.name}
+            />
+            <TextInputGroup
+              label="Email"
+              name="email"
+              type="email"
+              placeholder="Enter Email"
+              value={email}
+              onChange={this.onChange}
+              error={errors.email}
+            />
+            <TextInputGroup
+              label="Phone"
+              name="phone"
+              placeholder="Enter Phone"
+              value={phone}
+              onChange={this.onChange}
+              error={errors.phone}
+            />
+            <input
+              type="submit"
+              value="Update Contact"
+              className="btn btn-light btn-block"
+            />
+          </form>
+        </div>
+      </div>
     );
   }
 }
