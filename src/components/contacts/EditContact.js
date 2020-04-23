@@ -47,15 +47,17 @@ class EditContact extends Component {
       return;
     }
 
+    const { id } = this.props.match.params;
+
     const updContact = {
+      id,
       name,
       email,
       phone,
     };
 
-    const { id } = this.props.match.params;
-
     //// UPDATE CONTACT ////
+    this.props.updateContact(updContact);
 
     // Clear State
     this.setState({
@@ -117,6 +119,7 @@ class EditContact extends Component {
 
 EditContact.propTypes = {
   getContact: PropTypes.func.isRequired,
+  updateContact: PropTypes.func.isRequired,
   contact: PropTypes.object.isRequired,
 };
 
@@ -124,4 +127,6 @@ const mapStateToProps = (state) => ({
   contact: state.contact.contact,
 });
 
-export default connect(mapStateToProps, { getContact })(EditContact);
+export default connect(mapStateToProps, { getContact, updateContact })(
+  EditContact
+);
